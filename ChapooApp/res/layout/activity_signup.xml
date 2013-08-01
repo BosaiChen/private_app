@@ -1,0 +1,100 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+    
+    <ImageView
+        android:id="@+id/imageViewLogoSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/firstnameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/firstnameET"
+        android:layout_below="@+id/imageViewLogoSignup"
+        android:text="@string/firstname"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/firstnameET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/lastnameET"
+        android:layout_below="@+id/firstnameTV"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPersonName">
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/lastnameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/firstnameET"
+        android:layout_below="@+id/firstnameET"
+        android:text="@string/lastname"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/lastnameET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lastnameTV"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPersonName"/>
+    
+     <TextView
+         android:id="@+id/signupemailTV"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/lastnameET"
+         android:layout_below="@+id/lastnameET"
+         android:text="@string/email"
+         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/signupemailET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/lastnameET"
+        android:layout_below="@+id/signupemailTV"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textEmailAddress" >
+
+        <requestFocus />
+    </EditText>
+
+    <CheckBox
+        android:id="@+id/checkBoxagree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/firstnameTV"
+        android:layout_below="@+id/signupemailET"
+        android:text="@string/agreetoterms"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/signupButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageViewLogoSignup"
+        android:layout_below="@+id/checkBoxagree"
+        android:background="@drawable/button"
+        android:onClick="onclickSignup"
+        android:text="@string/signup"
+        android:textColor="#FFFFFFFF" />
+    
+</RelativeLayout>

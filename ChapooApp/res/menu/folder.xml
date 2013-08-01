@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+    <item
+        android:id="@+id/item_new_folder"
+        android:enabled="true"
+        android:onClick="createNewFolder"
+        android:title="@string/menu_item_new_folder">
+    </item>
+    
+    <item
+        android:id="@+id/item_refresh"
+        android:enabled="true"
+        android:onClick="refreshFolder"
+        android:title="@string/menu_item_refresh">
+    </item>
+    
+    <item
+        android:id="@+id/item_Logout"
+        android:enabled="true"
+        android:title="@string/menu_item_logout">
+    </item>
+
+</menu>

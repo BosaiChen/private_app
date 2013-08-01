@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FolderActivity" >
+    
+	<TextView
+        android:id="@+id/textViewHeadFolderName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/lighter_gray"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/root_folder_name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/TextViewEmptyList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewHeadFolderName"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/msg_empty_folder"
+        android:textSize="18sp" 
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/listViewFolderSub"
+        android:layout_width="match_parent"
+        android:layout_height="419dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewHeadFolderName" >
+    </ListView>
+</RelativeLayout>
