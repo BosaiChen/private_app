@@ -9,14 +9,12 @@
     <item
         android:id="@+id/item_new_folder"
         android:enabled="true"
-        android:onClick="createNewFolder"
         android:title="@string/menu_item_new_folder">
     </item>
     
     <item
         android:id="@+id/item_refresh"
         android:enabled="true"
-        android:onClick="refreshFolder"
         android:title="@string/menu_item_refresh">
     </item>
     

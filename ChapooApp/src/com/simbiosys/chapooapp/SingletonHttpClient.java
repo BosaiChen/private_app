@@ -45,8 +45,8 @@ public class SingletonHttpClient {
 	public SingletonHttpClient() {
 		if(httpClient == null) {
 			HttpParams httpParams = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
-			HttpConnectionParams.setSoTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
+	//		HttpConnectionParams.setConnectionTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
+	//		HttpConnectionParams.setSoTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
 			httpClient = new DefaultHttpClient(httpParams);
 		}
 		if(localContext == null) {
@@ -89,8 +89,8 @@ public class SingletonHttpClient {
 			httpGet.addHeader("Cookie", CookieJSESSIONID.getName() + "=" + CookieJSESSIONID.getValue());
 		}
 		try {
-			HttpResponse response = httpClient.execute(httpGet, localContext);
 			
+			HttpResponse response = httpClient.execute(httpGet, localContext);
 			//get the cookie if it is null
 			if(CookieJSESSIONID == null) {
 				Log.v("cookie", "Cookie1:= " + localContext.getAttribute(ClientContext.COOKIE_STORE).toString());

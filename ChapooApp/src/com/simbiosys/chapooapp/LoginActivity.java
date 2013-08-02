@@ -46,9 +46,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		context = this;
-		
-		
-		myHttpClient = SingletonHttpClient.getInstance();
 
 		usernameET = (EditText)findViewById(R.id.usernameET);
 		passwordET = (EditText)findViewById(R.id.passwordET);
@@ -98,12 +95,13 @@ public class LoginActivity extends Activity implements OnClickListener{
 			String username = params[0];
 			String password = params[1];
 			String loginURL = Constants.getLoginURL(username, password);
-			return myHttpClient.executeGet(loginURL);
+			return SingletonHttpClient.getInstance().executeGet(loginURL);
 		}
 
 		@Override
 		protected void onPostExecute(HttpResponse response) {
-			pd.dismiss();
+			if(pd != null) 
+				pd.dismiss();
 			int statusCode = SingletonHttpClient.getStatusCode(response);
 			if(SingletonHttpClient.isStatusOK(statusCode)) {
 				//logged in

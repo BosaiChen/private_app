@@ -5,17 +5,23 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class FolderActivity extends FragmentActivity {
 
 	private Bundle item;
@@ -35,6 +42,13 @@ public class FolderActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sub_folder);
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		    StrictMode.setThreadPolicy(policy);
+		}
+		
+		Log.v("pid",getProjectID());
 		
 		item = getIntent().getExtras();
 		Boolean isRoot = item.getBoolean("isRoot");
@@ -172,17 +186,19 @@ public class FolderActivity extends FragmentActivity {
 	}
 	
 	private String getProjectID(){
-		HttpResponse response = SingletonHttpClient.getInstance().executeGet(Constants.URL_PROJECTS);
-		String responseText = SingletonHttpClient.getResponseText(response);
+//		HttpResponse response = SingletonHttpClient.getInstance().executeGet(Constants.URL_PROJECTS);
+		
 		//get project
 		String projectID = null;
 		try {
+			HttpResponse response = new ConnAsyncTask().execute().get();
+			String responseText = SingletonHttpClient.getResponseText(response);
 			JSONArray jsonArray = new JSONArray(responseText);
 			for(int i = 0; i < jsonArray.length(); i++){
 				JSONObject json = jsonArray.getJSONObject(i);
 				projectID = json.getString(Constants.Project.JSON_TAG_ID);
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return projectID;
@@ -205,6 +221,24 @@ public class FolderActivity extends FragmentActivity {
 		return null;
 	}
 	
-	
+	private class ConnAsyncTask extends AsyncTask<String, Void, HttpResponse> {
+
+		/*private HttpGet httpGet;
+		
+		public ConnAsyncTask(HttpGet get) {
+			this.httpGet = get;
+		}*/
+		
+		@Override
+		protected HttpResponse doInBackground(String... params) {
+			try {
+				return SingletonHttpClient.getInstance().executeGet(Constants.URL_PROJECTS);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+	}
 
 }

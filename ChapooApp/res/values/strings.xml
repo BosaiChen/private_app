@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ChapooApp</string>
+    <string name="app_name">Chapoo</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="btn_login">Login</string>
     <string name="hint_username">name@example.com</string>
     <string name="hint_password">password</string>
-    <string name="title_activity_folder">FolderActivity</string>
+    <string name="title_activity_folder">Files</string>
     <string name="root_folder_name">Chapoo</string>
     <string name="icon_type_description">type icon</string>
     <string name="msg_empty_folder">Empty folder</string>
@@ -16,24 +16,22 @@
     <!-- &#8230; == "..." -->
     <string name="msg_folder_creating">Creating folder &#8230;</string>
     <string name="msg_renaming_object">Renaming &#8230; </string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="login">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="rememberme">Remember me</string>
     <string name="forgetpassword">forget password?</string>
-    <string name="title_activity_forget_pass">ForgetPassActivity</string>
+    <string name="title_activity_forget_pass">Forget Password</string>
     <string name="sendpassword">Send password</string>
     <string name="newuwersignup">New User? Signup Here!</string>
     <string name="alreadyauserlogin">Already a user? login</string>
-    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_signup">Sign up</string>
     <string name="firstname">Firstname</string>
     <string name="lastname">Lastname</string>
     <string name="email">Email</string>
     <string name="signup">Signup</string>
     <string name="agreetoterms">I agree to terms of use</string>
     <string name="menu_item_logout">Logout</string>
-    <string name="title_activity_root_folder">RootFolderActivity</string>
-    <string name="title_activity_sub_folder">SubFolderActivity</string>
 
 </resources>

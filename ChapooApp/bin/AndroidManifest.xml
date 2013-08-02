@@ -42,7 +42,7 @@
         </activity>
         <activity
             android:name="com.simbiosys.chapooapp.FolderActivity"
-            android:label="@string/title_activity_sub_folder" >
+            android:label="@string/title_activity_folder" >
         </activity>
     </application>
 
