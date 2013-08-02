@@ -131,6 +131,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 				//login failed
 				Toast.makeText(getBaseContext(), "Oops, please sign up first...", Toast.LENGTH_SHORT).show();
 			}
+			
 		}
 	}
 

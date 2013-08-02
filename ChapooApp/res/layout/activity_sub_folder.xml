@@ -29,12 +29,25 @@
         android:text="@string/msg_empty_folder"
         android:textSize="18sp" 
         android:visibility="gone"/>
+    
+     <TextView
+        android:id="@+id/TextViewLoadingFolder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewHeadFolderName"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/msg_folder_loading"
+        android:textSize="18sp" />
 
     <ListView
         android:id="@+id/listViewFolderSub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textViewHeadFolderName" >
+        android:layout_below="@+id/textViewHeadFolderName" 
+        android:visibility="gone" >
     </ListView>
 </RelativeLayout>

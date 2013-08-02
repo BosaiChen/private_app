@@ -33,5 +33,6 @@
     <string name="signup">Signup</string>
     <string name="agreetoterms">I agree to terms of use</string>
     <string name="menu_item_logout">Logout</string>
+    <string name="msg_folder_loading">Loading folders &#8230;</string>
 
 </resources>

@@ -27,20 +27,28 @@ public class FolderAdapter extends ArrayAdapter<ItemObject>{
 		this.items = objects;
 	}
 	
+	public class ViewHolder{
+		public int type;
+		public String id;
+		public String name;
+	}
+	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rowView = inflater.inflate(R.layout.folder_row, parent, false);
 		
 		ItemObject item = items.get(position);
-		final int type = item.getType();
-		final String id= item.getId();
-		final String name = item.getName();
+		
+		ViewHolder viewholder = new ViewHolder();
+		viewholder.type = item.getType();;
+		viewholder.id = item.getId();
+		viewholder.name = item.getName();
 		
 		ImageView icon = (ImageView)rowView.findViewById(R.id.imageViewTypeIcon);
 		TextView itemName = (TextView)rowView.findViewById(R.id.textViewObjectName);
-		itemName.setText(name);
-		switch(type) {
+		itemName.setText(viewholder.name);
+		switch(viewholder.type) {
 			case Constants.ObjectType.OBJECT_TYPE_FOLDER:
 				icon.setImageResource(R.drawable.folder);
 				break;
@@ -48,7 +56,9 @@ public class FolderAdapter extends ArrayAdapter<ItemObject>{
 				icon.setImageResource(R.drawable.pdf);
 				break;
 		}
-		rowView.setOnClickListener(new OnClickListener(){
+		
+		rowView.setTag(viewholder);
+		/*rowView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				if(type == ObjectType.OBJECT_TYPE_FOLDER) {
@@ -63,7 +73,7 @@ public class FolderAdapter extends ArrayAdapter<ItemObject>{
 					Toast.makeText(context, "Document clicked", Toast.LENGTH_SHORT).show();
 				}
 			}
-		});
+		});*/
 		
 		/*rowView.setOnLongClickListener(new OnLongClickListener(){
 
