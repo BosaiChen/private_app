@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,12 +13,7 @@ import com.simbiosys.chapooapp.Constants.ObjectType;
 import com.simbiosys.chapooapp.FolderAdapter.ViewHolder;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.StrictMode;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,7 +32,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class FolderActivity extends FragmentActivity {
 
 	private Bundle item;
@@ -52,11 +45,6 @@ public class FolderActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sub_folder);
 
-		/*if (android.os.Build.VERSION.SDK_INT > 9) {
-		    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		    StrictMode.setThreadPolicy(policy);
-		}*/
-
 		loadingMsg = (TextView)findViewById(R.id.TextViewLoadingFolder);
 		listview = (ListView)findViewById(R.id.listViewFolderSub);
 		
@@ -66,91 +54,14 @@ public class FolderActivity extends FragmentActivity {
 		item = getIntent().getExtras();
 		isRoot = item.getBoolean("isRoot");
 		if(isRoot) 
-			new GetProjectAsyncTask().execute();
-		//		fid = getRootFolderID(getProjectID());
+			new GetRootFolderAsyncTask().execute();
 		else {
 			fid = item.getString("id");
 			new DisplayItemAsyncTask().execute(fid);
 		}
 
-
 		TextView topBar = (TextView)findViewById(R.id.textViewHeadFolderName);
 		topBar.setText(item.getString("name"));
-		//	displayItems(fid);
-	}
-
-
-	private class GetProjectAsyncTask extends AsyncTask<Void, Void, String> {
-
-		@Override
-		protected String doInBackground(Void... params) {
-			return getProjectID();
-		}
-
-		@Override
-		protected void onPostExecute(String pid) {
-			new GetRootFolderAsyncTask().execute(pid);
-			Log.v("get project",pid);
-		}
-	}
-
-	private class GetRootFolderAsyncTask extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... pid) {
-			return getRootFolderID(pid[0]);
-		}
-
-		@Override
-		protected void onPostExecute(String fid) {
-			new DisplayItemAsyncTask().execute(fid);
-			Log.v("get root folder",fid);
-		}
-	}
-
-	private class DisplayItemAsyncTask extends AsyncTask<String, Void, List<ItemObject>> {
-
-		@Override
-		protected List<ItemObject> doInBackground(String... fids) {
-			Log.v("pid","onpost");
-			return displayItems(fids[0]);
-			
-		}
-
-		@Override
-		protected void onPostExecute(final List<ItemObject> items) {
-			FolderAdapter adapter = new FolderAdapter(getBaseContext(), items);
-			listview.setEmptyView(findViewById(R.id.TextViewEmptyList));
-			listview.setAdapter(adapter);
-			loadingMsg.setVisibility(View.GONE);
-			listview.setVisibility(View.VISIBLE);
-
-			listview.setOnItemLongClickListener(new OnItemLongClickListener(){
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-					EditDialog edit = new EditDialog();
-					edit.show(getSupportFragmentManager(), "edit dialog");
-					return true;
-				}
-			});
-			
-			listview.setOnItemClickListener(new OnItemClickListener(){
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					ViewHolder viewholder = (ViewHolder)view.getTag();
-					int type = viewholder.type;
-					if(type == ObjectType.OBJECT_TYPE_FOLDER) {
-						startSubFolder(viewholder);
-					} else if(type == ObjectType.OBJECT_TYPE_DOCUMENT) {
-						Toast.makeText(getBaseContext(), "Document clicked", Toast.LENGTH_SHORT).show();
-					}
-					
-				}
-			});
-		}
-
-
 	}
 
 	@Override
@@ -216,33 +127,14 @@ public class FolderActivity extends FragmentActivity {
 	}
 
 	private void createNewFolder(String folderName, String parentID, String type, String afterID) {
-		String url = Constants.getFolderURL(Constants.Action.ACTION_FOLDER_CREATE_NEW, null);
+		
 		JSONObject json = new JSONObject();
 		try {
 			json.put("Name", folderName);
 			json.put("Type", type);
 			json.put("ParentID", parentID);
 			json.put("AfterID", afterID);
-			HttpResponse response = SingletonHttpClient.getInstance().executePost(url, json);
-			if(SingletonHttpClient.getStatusCode(response) ==  HttpStatus.SC_UNAUTHORIZED) {
-				//if not authorized, creating new folder will fail
-				Toast.makeText(this, "Oops,unauthorized to create folder...", Toast.LENGTH_SHORT).show();
-			} else {
-				//new folder created
-				String responseText = SingletonHttpClient.getResponseText(response);
-				String id = MyJSONParser.getValueByKey(responseText, Constants.Folder.JSON_TAG_FOLDER_ID);
-				String name = MyJSONParser.getValueByKey(responseText, Constants.Folder.JSON_TAG_FOLDER_NAME);
-
-				Bundle b = new Bundle();
-				b.putString("id", id);
-				b.putString("name", name);
-				b.putBoolean("isRoot",false);
-				finish();
-				//refresh parent folder
-				Helper.startActivity(this, FolderActivity.class, item);
-				//go to new folder
-				Helper.startActivity(this, FolderActivity.class, b);
-			}	
+			new NewFolderAsyncTask(this).execute(json);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -297,14 +189,49 @@ public class FolderActivity extends FragmentActivity {
 		}
 		return null;
 	}
+	
+	private class NewFolderAsyncTask extends AsyncTask<JSONObject, Void, HttpResponse> {
 
+		Activity activity;
+	    private NewFolderAsyncTask(Activity activity) {
+	        this.activity = activity;
+	    }
+		
+		@Override
+		protected HttpResponse doInBackground(JSONObject... json) {
+			String url = Constants.getFolderURL(Constants.Action.ACTION_FOLDER_CREATE_NEW, null);
+			return SingletonHttpClient.getInstance().executePost(url, json[0]);
+		}
+
+		@Override
+		protected void onPostExecute(HttpResponse response) {
+			if(SingletonHttpClient.getStatusCode(response) ==  HttpStatus.SC_UNAUTHORIZED) {
+				//if not authorized, creating new folder will fail
+				Toast.makeText(activity, "Oops,unauthorized to create folder...", Toast.LENGTH_SHORT).show();
+			} else {
+				//new folder created
+				String responseText = SingletonHttpClient.getResponseText(response);
+				String id = MyJSONParser.getValueByKey(responseText, Constants.Folder.JSON_TAG_FOLDER_ID);
+				String name = MyJSONParser.getValueByKey(responseText, Constants.Folder.JSON_TAG_FOLDER_NAME);
+
+				Bundle b = new Bundle();
+				b.putString("id", id);
+				b.putString("name", name);
+				b.putBoolean("isRoot",false);
+				finish();
+				//refresh parent folder
+				Intent pFolder = new Intent(activity, FolderActivity.class);
+				pFolder.putExtras(item);
+				startActivity(pFolder);
+				//go to new folder
+				Intent newFolder = new Intent(activity, FolderActivity.class);
+				newFolder.putExtras(b);
+				startActivity(newFolder);
+			}	
+		}
+	}
+	
 	private class ConnAsyncTask extends AsyncTask<String, Void, HttpResponse> {
-
-		/*private HttpGet httpGet;
-
-		public ConnAsyncTask(HttpGet get) {
-			this.httpGet = get;
-		}*/
 
 		@Override
 		protected HttpResponse doInBackground(String... params) {
@@ -314,6 +241,62 @@ public class FolderActivity extends FragmentActivity {
 				e.printStackTrace();
 			}
 			return null;
+		}
+	}
+	
+	private class GetRootFolderAsyncTask extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected String doInBackground(Void... params) {
+			return getRootFolderID(getProjectID());
+		}
+
+		@Override
+		protected void onPostExecute(String pid) {
+			new DisplayItemAsyncTask().execute(pid);
+		}
+	}
+
+	private class DisplayItemAsyncTask extends AsyncTask<String, Void, List<ItemObject>> {
+
+		@Override
+		protected List<ItemObject> doInBackground(String... fids) {
+			Log.v("pid","onpost");
+			return displayItems(fids[0]);
+			
+		}
+
+		@Override
+		protected void onPostExecute(final List<ItemObject> items) {
+			FolderAdapter adapter = new FolderAdapter(getBaseContext(), items);
+			listview.setEmptyView(findViewById(R.id.TextViewEmptyList));
+			listview.setAdapter(adapter);
+			loadingMsg.setVisibility(View.GONE);
+			listview.setVisibility(View.VISIBLE);
+
+			listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+					EditDialog edit = new EditDialog();
+					edit.show(getSupportFragmentManager(), "edit dialog");
+					return true;
+				}
+			});
+			
+			listview.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					ViewHolder viewholder = (ViewHolder)view.getTag();
+					int type = viewholder.type;
+					if(type == ObjectType.OBJECT_TYPE_FOLDER) {
+						startSubFolder(viewholder);
+					} else if(type == ObjectType.OBJECT_TYPE_DOCUMENT) {
+						Toast.makeText(getBaseContext(), "Document clicked", Toast.LENGTH_SHORT).show();
+					}
+					
+				}
+			});
 		}
 	}
 

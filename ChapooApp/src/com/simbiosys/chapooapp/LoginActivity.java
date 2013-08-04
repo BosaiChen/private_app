@@ -76,9 +76,9 @@ public class LoginActivity extends Activity implements OnClickListener{
 		username = "bchen04@syr.edu";
 		password = "19880227";
 
-		if(username.isEmpty()) 
+		if(username.equals("")) 
 			Toast.makeText(this, "Username required...", Toast.LENGTH_SHORT).show();
-		else if(password.isEmpty()) 
+		else if(password.equals("")) 
 			Toast.makeText(this, "Password required...", Toast.LENGTH_SHORT).show();
 		else {
 			//login
@@ -105,19 +105,21 @@ public class LoginActivity extends Activity implements OnClickListener{
 			int statusCode = SingletonHttpClient.getStatusCode(response);
 			if(SingletonHttpClient.isStatusOK(statusCode)) {
 				//logged in
-				/*if(ifRemember == true){
+				if(ifRemember == true){
 					//store username&password for auto login
 					sp= getSharedPreferences("LoginFile", MODE_PRIVATE); 
 					SharedPreferences.Editor spEditor= sp.edit();
 					spEditor.putString("username", username);
 					spEditor.putString("password", password);
+					spEditor.putBoolean("isLogged", true);
 					spEditor.commit();	
 				}
-				SharedPreferences settings=context.getApplicationContext().getSharedPreferences("LoginFile", MODE_PRIVATE);
+				/*SharedPreferences settings=context.getApplicationContext().getSharedPreferences("LoginFile", MODE_PRIVATE);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putBoolean("isLogged", true);
 				Log.v("isLogged",Boolean.toString(settings.getBoolean("isLogged", false)));
 				editor.commit();*/
+				
 				Intent i = new Intent(getBaseContext(),FolderActivity.class);
 				Bundle data = new Bundle();
 				data.putBoolean("isRoot",true);

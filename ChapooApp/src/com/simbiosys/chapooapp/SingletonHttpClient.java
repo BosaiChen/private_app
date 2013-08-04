@@ -170,7 +170,7 @@ public class SingletonHttpClient {
 	}
 	
 	public HttpResponse executeDelete(String url) {
-		HttpDelete httpDelete = new HttpDelete(url);
+		HttpDelete httpDelete = new HttpDelete(url); 
 		if(CookieJSESSIONID != null) {
 			httpDelete.addHeader("Cookie", CookieJSESSIONID.getName() + "=" + CookieJSESSIONID.getValue());
 		}

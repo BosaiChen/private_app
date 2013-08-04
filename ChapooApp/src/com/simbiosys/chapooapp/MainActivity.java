@@ -1,5 +1,8 @@
 package com.simbiosys.chapooapp;
 
+import org.apache.http.HttpResponse;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,23 +10,25 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		
-		SharedPreferences settings=this.getApplicationContext().getSharedPreferences("LoginFile", MODE_PRIVATE);
-		boolean isLogged=settings.getBoolean("isLogged", false);
-		/*if(isLogged){
-			Intent i = new Intent(getBaseContext(),FolderActivity.class);
-			startActivity(i);
+		
+		/*SharedPreferences sp = getSharedPreferences("LoginFile", MODE_PRIVATE);
+		boolean isLogged = sp.getBoolean("isLogged", false);
+		if(isLogged){
+			String username = sp.getString("username", "");
+			String password = sp.getString("password", "");
+			new AutoLoginAsyncTask(this).execute(username, password);
 			return;
-		}*/
+		} */
 		
-		Log.v("main","created");
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override
@@ -45,9 +50,31 @@ public class MainActivity extends Activity {
 		startActivity(i);
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.v("main","ondestroy");
+	private class AutoLoginAsyncTask extends AsyncTask<String, Void, HttpResponse> {
+		
+		Activity activity;
+		
+		public AutoLoginAsyncTask(Activity activity) {
+			this.activity = activity;
+		}
+		
+		@Override
+		protected HttpResponse doInBackground(String... params) {
+			String username = params[0];
+			String password = params[1];
+			String loginURL = Constants.getLoginURL(username, password);
+			return SingletonHttpClient.getInstance().executeGet(loginURL);
+		}
+
+		@Override
+		protected void onPostExecute(HttpResponse response) {
+			Intent i = new Intent(activity,FolderActivity.class);
+			Bundle b = new Bundle();
+			b.putBoolean("isRoot", true);
+			b.putString("name", "Chapoo");
+			i.putExtras(b);
+
+			activity.startActivity(i);
+		}
 	}
 }

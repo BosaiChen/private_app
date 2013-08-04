@@ -28,7 +28,6 @@ public class ForgetPassActivity extends Activity{
 	private EditText usernameET;
 	private Activity context;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
