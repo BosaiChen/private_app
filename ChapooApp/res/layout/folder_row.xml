@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-	<LinearLayout
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:paddingTop="15dp"
+        android:layout_height="wrap_content"
         android:paddingBottom="15dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:paddingRight="15dp"
+        android:paddingTop="15dp" >
 
         <ImageView
             android:id="@+id/imageViewTypeIcon"
@@ -24,7 +24,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginLeft="16dp"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
-    
+
 </LinearLayout>

@@ -87,9 +87,9 @@ public class Constants {
 		final static int ACTION_FOLDER_GET_THE_FOLDER = 8;
 	}
 	
-	public class Operation{
-		final static String OP_DELETE = "Delete";
-		final static String OP_RENAME = "Rename";
+	public class Edit{
+		final static String EDIT_DELETE = "Delete";
+		final static String EDIT_RENAME = "Rename";
 	}
 	
 	public class Network{

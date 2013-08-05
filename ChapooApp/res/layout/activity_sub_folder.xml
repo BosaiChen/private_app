@@ -15,7 +15,9 @@
         android:padding="8dp"
         android:text="@string/root_folder_name"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        android:singleLine="true"
+        android:ellipsize="middle"/>
     
     <TextView
         android:id="@+id/TextViewEmptyList"

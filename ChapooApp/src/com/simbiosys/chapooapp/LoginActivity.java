@@ -73,8 +73,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 		password = passwordET.getText().toString();
 		ifRemember = rememberCB.isChecked();
 
-		username = "bchen04@syr.edu";
-		password = "19880227";
+	//	username = "bchen04@syr.edu";
+	//	password = "19880227";
 
 		if(username.equals("")) 
 			Toast.makeText(this, "Username required...", Toast.LENGTH_SHORT).show();

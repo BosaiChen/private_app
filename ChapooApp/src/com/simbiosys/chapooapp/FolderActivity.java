@@ -27,15 +27,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FolderActivity extends FragmentActivity {
+public class FolderActivity extends FragmentActivity implements EditDialog.OnEditDialogShownListener{
 
 	private Bundle item;
-	private String fid;
+	private String fid, fname;
 	TextView loadingMsg;
 	Boolean isRoot;
 	private ListView listview;
@@ -53,6 +54,7 @@ public class FolderActivity extends FragmentActivity {
 
 		item = getIntent().getExtras();
 		isRoot = item.getBoolean("isRoot");
+		fname = item.getString("name");
 		if(isRoot) 
 			new GetRootFolderAsyncTask().execute();
 		else {
@@ -61,7 +63,7 @@ public class FolderActivity extends FragmentActivity {
 		}
 
 		TextView topBar = (TextView)findViewById(R.id.textViewHeadFolderName);
-		topBar.setText(item.getString("name"));
+		topBar.setText(fname);
 	}
 
 	@Override
@@ -273,15 +275,6 @@ public class FolderActivity extends FragmentActivity {
 			listview.setAdapter(adapter);
 			loadingMsg.setVisibility(View.GONE);
 			listview.setVisibility(View.VISIBLE);
-
-			listview.setOnItemLongClickListener(new OnItemLongClickListener(){
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-					EditDialog edit = new EditDialog();
-					edit.show(getSupportFragmentManager(), "edit dialog");
-					return true;
-				}
-			});
 			
 			listview.setOnItemClickListener(new OnItemClickListener(){
 				@Override
@@ -295,6 +288,24 @@ public class FolderActivity extends FragmentActivity {
 						Toast.makeText(getBaseContext(), "Document clicked", Toast.LENGTH_SHORT).show();
 					}
 					
+				}
+			});
+			
+			//long click item to show edit list
+			listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+					ViewHolder viewholder = (ViewHolder)v.getTag();
+					
+					Bundle data = new Bundle();
+					data.putString("name", viewholder.name);
+					data.putString("pid", fid);
+					data.putInt("type", viewholder.type);
+					data.putString("id", viewholder.id); //folder id
+					EditDialog edit = EditDialog.newInstance(data);
+					edit.show(getSupportFragmentManager(), "edit dialog");
+					
+					return true;
 				}
 			});
 		}
@@ -318,5 +329,12 @@ public class FolderActivity extends FragmentActivity {
 		i.putExtras(b);
 		startActivity(i);
 	}
-	
+
+	@Override
+	public void reloadAcitivity() {
+		finish();
+		Intent i = new Intent(this, FolderActivity.class);
+		i.putExtras(this.item);
+		startActivity(i);
+	}
 }
