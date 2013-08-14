@@ -11,6 +11,7 @@ public class Constants {
 	final static String URL_LOGOFF = URL_REST_BASE + "Logoff";
 	final static String URL_SIGNUP = URL_DOMAIN + "openid/SubscribeUser";
 	final static String URL_FORGET_PASSWORD = URL_DOMAIN + "openid/ForgotPassword";
+	final static String URL_CHAPOO_ACCOUNT = URL_REST_BASE +"ChapooAccount";
 	
 	public class File {
 		
@@ -79,6 +80,7 @@ public class Constants {
 		final static int ACTION_DOCUMENT_DOWNLOAD = 1;
 		final static int ACTION_DOCUMENT_DELETE = 2;
 		final static int ACTION_DOCUMENT_RENAME = 3;
+		final static int ACTION_DOCUMENT_UPLOAD = 9;
 		
 		final static int ACTION_FOLDER_GET_CHILD_FOLDERS = 4;
 		final static int ACTION_FOLDER_CREATE_NEW = 5;

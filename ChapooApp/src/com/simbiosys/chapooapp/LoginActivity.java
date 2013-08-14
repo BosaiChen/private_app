@@ -1,5 +1,13 @@
 package com.simbiosys.chapooapp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.http.HttpResponse;
 
 import android.os.Bundle;
@@ -9,7 +17,6 @@ import android.view.Menu;
 
 import android.os.AsyncTask;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -27,7 +34,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 	private ProgressDialog pd;
 	private CheckBox rememberCB;
 	private Boolean ifRemember;
-	private SingletonHttpClient myHttpClient;
 	private TextView forgetTV;
 	private Button loginBT;
 	private Activity context;
@@ -53,10 +59,10 @@ public class LoginActivity extends Activity implements OnClickListener{
 
 		forgetTV = (TextView)findViewById(R.id.forgetTV);
 		loginBT = (Button)findViewById(R.id.loginButton);
-		
+
 		forgetTV.setOnClickListener(this);
 		loginBT.setOnClickListener(this);
-		
+
 		Log.v("login","oncreate");
 	}
 
@@ -73,8 +79,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 		password = passwordET.getText().toString();
 		ifRemember = rememberCB.isChecked();
 
-	//	username = "bchen04@syr.edu";
-	//	password = "19880227";
+		username = "bchen04@syr.edu";
+		password = "19880227";
 
 		if(username.equals("")) 
 			Toast.makeText(this, "Username required...", Toast.LENGTH_SHORT).show();
@@ -119,21 +125,21 @@ public class LoginActivity extends Activity implements OnClickListener{
 				editor.putBoolean("isLogged", true);
 				Log.v("isLogged",Boolean.toString(settings.getBoolean("isLogged", false)));
 				editor.commit();*/
-				
+
 				Intent i = new Intent(getBaseContext(),FolderActivity.class);
 				Bundle data = new Bundle();
 				data.putBoolean("isRoot",true);
 				data.putString("name","Chapoo");
 				i.putExtras(data);
 				startActivity(i);
-				
-				
-			//	Helper.startActivity(getBaseContext(), SubFolderActivity.class, data);
+
+
+				//	Helper.startActivity(getBaseContext(), SubFolderActivity.class, data);
 			} else {
 				//login failed
 				Toast.makeText(getBaseContext(), "Oops, please sign up first...", Toast.LENGTH_SHORT).show();
 			}
-			
+
 		}
 	}
 
@@ -141,13 +147,12 @@ public class LoginActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		int id = v.getId();
 		switch(id) {
-			case R.id.forgetTV:
-				startActivity(new Intent(this, ForgetPassActivity.class));
-				break;
-			case R.id.loginButton:
-				login();
-				break;
+		case R.id.forgetTV:
+			startActivity(new Intent(this, ForgetPassActivity.class));
+			break;
+		case R.id.loginButton:
+			login();
+			break;
 		}
-
 	}
 }

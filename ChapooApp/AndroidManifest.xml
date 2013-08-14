@@ -43,5 +43,18 @@
             android:name="com.simbiosys.chapooapp.FolderActivity"
             android:label="@string/title_activity_folder" >
         </activity>
+        <activity
+            android:name="com.simbiosys.chapooapp.SettinglistActivity"
+            android:label="@string/title_activity_settinglist"
+            android:parentActivityName="android.app.ListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.app.ListActivity" />
+        </activity>
+        <activity
+            android:name="com.simbiosys.chapooapp.UploadActivity"
+            android:label="@string/title_activity_upload" >
+        </activity>
     </application>
+
 </manifest>

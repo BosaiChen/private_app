@@ -24,7 +24,7 @@ public class DefaultApplication extends Application {
 			new AutoLoginAsyncTask().execute(username, password);
 			return;
 		} else {
-			Intent i = new Intent(getBaseContext(),MainActivity.class);
+			Intent i = new Intent(getBaseContext(), MainActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);

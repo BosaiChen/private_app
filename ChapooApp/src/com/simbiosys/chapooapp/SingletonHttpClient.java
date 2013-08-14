@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -24,7 +22,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -45,8 +42,8 @@ public class SingletonHttpClient {
 	public SingletonHttpClient() {
 		if(httpClient == null) {
 			HttpParams httpParams = new BasicHttpParams();
-	//		HttpConnectionParams.setConnectionTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
-	//		HttpConnectionParams.setSoTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
+			HttpConnectionParams.setConnectionTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
+			HttpConnectionParams.setSoTimeout(httpParams, Constants.Network.TIMEOUT_MILLISEC);
 			httpClient = new DefaultHttpClient(httpParams);
 		}
 		if(localContext == null) {
@@ -64,21 +61,7 @@ public class SingletonHttpClient {
 		return _instance;
 	}
 	
-	/*public boolean LoginServerByPost(String username, String password, String ifremember) {
-		List<NameValuePair> postData = new ArrayList<NameValuePair>();
-		postData.add(new BasicNameValuePair("u", username));
-		postData.add(new BasicNameValuePair("p", password));
-		postData.add(new BasicNameValuePair("rememberme", ifremember));
-		Log.v("loginserver", "ok");
-		String loginUrl = Constants.URL_LOGIN;
-		HttpResponse response = _instance.executePost(loginUrl,postData);
-		String responseText = _instance.getResponseText(response);
-		Log.v("aaa", responseText);
-		if(responseText.contains("error")) {
-			return false;
-		}
-		return true;
-	}*/
+	
 	
 	public HttpResponse executeGet(String url) {
 		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
@@ -239,6 +222,7 @@ public class SingletonHttpClient {
 				e.printStackTrace();
 			}	
 		}
+		Log.v("folder", "entity null");
 		return null;
 	}
 	

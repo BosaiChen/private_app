@@ -23,5 +23,11 @@
         android:enabled="true"
         android:title="@string/menu_item_logout">
     </item>
+    
+    <item
+        android:id="@+id/item_upload"
+        android:enabled="true"
+        android:title="@string/menu_item_upload">
+    </item>
 
 </menu>

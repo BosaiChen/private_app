@@ -33,6 +33,12 @@
     <string name="signup">Signup</string>
     <string name="agreetoterms">I agree to terms of use</string>
     <string name="menu_item_logout">Logout</string>
+    <string name="menu_item_upload">Upload</string>
     <string name="msg_folder_loading">Loading folders &#8230;</string>
+    <string name="button_upload">Upload</string>
+    
+    <string name="title_activity_settinglist">Settings</string>
+    
+    <string name="title_activity_upload">upload</string>
 
 </resources>
