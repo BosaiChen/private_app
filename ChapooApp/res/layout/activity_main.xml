@@ -6,13 +6,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity" 
+    android:background="@color/background_color">
     
     <ImageView
         android:id="@+id/imageViewLogoMain"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
         android:src="@drawable/logo" />
 
     <Button
@@ -21,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/signupButtonMain"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="22dp"
-        android:background="@drawable/button"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/customized_button"
         android:onClick="onclickLogin"
         android:text="@string/alreadyauserlogin"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
@@ -34,13 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/loginButtonMain"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/button"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/customized_button"
         android:onClick="onclickSignup"
         android:text="@string/newuwersignup"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
         android:textColor="#FFFFFFFF" />
-
-    
     
 </RelativeLayout>

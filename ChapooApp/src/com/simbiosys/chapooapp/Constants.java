@@ -20,6 +20,7 @@ public class Constants {
 	public class ObjectType{
 		final static int OBJECT_TYPE_FOLDER = 1;
 		final static int OBJECT_TYPE_DOCUMENT = 2;
+		final static int OBJECT_TYPE_PARENT_FOLDER = 3;
 		final static String TAG_OBJECT_TYPE = "objectType";
 	}
 	
@@ -131,6 +132,8 @@ public class Constants {
 				return URL_REST_BASE + "Documents?r=" + documentID + "&f=" + folderID;
 			case Action.ACTION_DOCUMENT_RENAME:
 				return URL_REST_BASE + "Documents";
+			case Action.ACTION_DOCUMENT_UPLOAD:
+				return URL_REST_BASE + "Documents?f=" + folderID + "&name=" + documentID;//in fact docID is doc name for upload 
 			default:
 				return null;
 		}

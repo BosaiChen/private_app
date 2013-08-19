@@ -251,8 +251,8 @@ public class SingletonHttpClient {
 		return false;
 	}
 	
-	public Cookie getCookieJSEESIONID(){
-		return CookieJSESSIONID;
+	public static String getCookieJSEESIONID(){
+		return CookieJSESSIONID.getValue();
 	}
 	
 }

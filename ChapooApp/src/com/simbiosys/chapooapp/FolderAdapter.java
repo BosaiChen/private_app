@@ -20,11 +20,13 @@ public class FolderAdapter extends ArrayAdapter<ItemObject>{
 
 	private final Context context;
 	private List<ItemObject> items;
+	private boolean isRoot;
 	
-	public FolderAdapter(Context context, List<ItemObject> objects) {
+	public FolderAdapter(Context context, List<ItemObject> objects, boolean isRoot) {
 		super(context, R.layout.folder_row, objects);
 		this.context = context;
 		this.items = objects;
+		this.isRoot = isRoot;
 	}
 	
 	public class ViewHolder{
@@ -55,37 +57,12 @@ public class FolderAdapter extends ArrayAdapter<ItemObject>{
 			case Constants.ObjectType.OBJECT_TYPE_DOCUMENT:
 				icon.setImageResource(R.drawable.pdf);
 				break;
+			case Constants.ObjectType.OBJECT_TYPE_PARENT_FOLDER:
+				icon.setImageResource(R.drawable.blue_arrow_up);
+				break;
 		}
 		
 		rowView.setTag(viewholder);
-		/*rowView.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if(type == ObjectType.OBJECT_TYPE_FOLDER) {
-					Intent i = new Intent(context, FolderActivity.class);
-					Bundle b = new Bundle();
-					b.putString("id", id);
-					b.putString("name", name);
-					b.putBoolean("isRoot", false);
-					i.putExtras(b);
-					context.startActivity(new Intent(i));
-				} else if(type == ObjectType.OBJECT_TYPE_DOCUMENT) {
-					Toast.makeText(context, "Document clicked", Toast.LENGTH_SHORT).show();
-				}
-			}
-		});*/
-		
-		/*rowView.setOnLongClickListener(new OnLongClickListener(){
-
-			@Override
-			public boolean onLongClick(View v) {
-				EditDialog edit = new EditDialog();
-				edit.show(context, tag)
-				return false;
-			}
-			
-		});*/
-		
 		return rowView;
 	}
 	

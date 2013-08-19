@@ -24,8 +24,8 @@
     <string name="forgetpassword">forget password?</string>
     <string name="title_activity_forget_pass">Forget Password</string>
     <string name="sendpassword">Send password</string>
-    <string name="newuwersignup">New User? Signup Here!</string>
-    <string name="alreadyauserlogin">Already a user? login</string>
+    <string name="newuwersignup">Signup for Chapoo</string>
+    <string name="alreadyauserlogin">Sign in</string>
     <string name="title_activity_signup">Sign up</string>
     <string name="firstname">Firstname</string>
     <string name="lastname">Lastname</string>
@@ -36,9 +36,8 @@
     <string name="menu_item_upload">Upload</string>
     <string name="msg_folder_loading">Loading folders &#8230;</string>
     <string name="button_upload">Upload</string>
-    
     <string name="title_activity_settinglist">Settings</string>
-    
     <string name="title_activity_upload">upload</string>
+    <string name="title_activity_download">View Document</string>
 
 </resources>

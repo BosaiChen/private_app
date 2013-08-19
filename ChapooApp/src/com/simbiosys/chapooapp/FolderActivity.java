@@ -17,8 +17,11 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -35,7 +38,7 @@ import android.widget.Toast;
 public class FolderActivity extends FragmentActivity implements EditDialog.OnEditDialogShownListener{
 
 	private Bundle item;
-	private String fid, fname;
+	private String pid,pname, fid, fname; //pid == parent folder id
 	TextView loadingMsg;
 	Boolean isRoot;
 	private ListView listview;
@@ -51,6 +54,15 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 		item = getIntent().getExtras();
 		isRoot = item.getBoolean("isRoot");
 		fname = item.getString("name");
+		
+		if(item.containsKey("pid")) {
+			pid = item.getString("pid");
+		}
+		
+		if(item.containsKey("pname")) {
+			pname = item.getString("pname");
+		}
+		
 		if(isRoot) 
 			new GetRootFolderAsyncTask().execute();
 		else {
@@ -82,13 +94,15 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 			startActivity(i);
 			return true;
 		case R.id.item_Logout:
-			logout();
+			new LogoutAsyncTask().execute();
 			return true;
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettinglistActivity.class));
 			return true;
 		case R.id.item_upload:
-			startActivity(new Intent(this, UploadActivity.class));
+			Intent uploadIntent = new Intent(this, UploadActivity.class);
+			uploadIntent.putExtras(this.item);
+			startActivity(uploadIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -97,6 +111,9 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 
 	public List<ItemObject> displayItems(String folderID) {
 		List<ItemObject> list = new ArrayList<ItemObject>();
+		if(!isRoot) {
+			list.add(new ItemObject(pid, pname, ObjectType.OBJECT_TYPE_PARENT_FOLDER));
+		}
 		list.addAll(ItemObject.getChildFolders(folderID));
 		list.addAll(ItemObject.getChildDocuments(folderID));
 		return list;
@@ -145,20 +162,6 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 		}
 	}
 
-	public void logout() {
-		SingletonHttpClient.getInstance().executeGet(Constants.URL_LOGOFF);
-
-		/*SharedPreferences settings=context.getApplicationContext().getSharedPreferences("LoginFile", Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		Log.v("isLogged",Boolean.toString(settings.getBoolean("isLogged", false)));
-		editor.remove("isLogged");
-		editor.commit();*/
-
-		Intent i = new Intent(this, MainActivity.class);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-	}
-
 	public String getRootFolderID(String projectID) {
 		HttpResponse response = SingletonHttpClient.getInstance().executeGet(Constants.getFolderURL(projectID));
 		String responseText = SingletonHttpClient.getResponseText(response);
@@ -204,6 +207,8 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 				b.putString("id", id);
 				b.putString("name", name);
 				b.putBoolean("isRoot",false);
+				b.putString("pid", fid);
+				b.putString("pname", fname);
 				finish();
 				//refresh parent folder
 				Intent pFolder = new Intent(activity, FolderActivity.class);
@@ -257,14 +262,12 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 
 		@Override
 		protected List<ItemObject> doInBackground(String... fids) {
-			Log.v("pid","onpost");
 			return displayItems(fids[0]);
-
 		}
 
 		@Override
 		protected void onPostExecute(final List<ItemObject> items) {
-			FolderAdapter adapter = new FolderAdapter(getBaseContext(), items);
+			FolderAdapter adapter = new FolderAdapter(getBaseContext(), items, isRoot);
 			listview.setEmptyView(findViewById(R.id.TextViewEmptyList));
 			listview.setAdapter(adapter);
 			loadingMsg.setVisibility(View.GONE);
@@ -279,9 +282,11 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 					if(type == ObjectType.OBJECT_TYPE_FOLDER) {
 						startSubFolder(viewholder);
 					} else if(type == ObjectType.OBJECT_TYPE_DOCUMENT) {
-						Toast.makeText(getBaseContext(), "Document clicked", Toast.LENGTH_SHORT).show();
+						//click to download document
+						startDownloadActivity(viewholder.id, viewholder.name);
+					} else if(type == ObjectType.OBJECT_TYPE_PARENT_FOLDER) {
+						finish();
 					}
-
 				}
 			});
 
@@ -291,6 +296,10 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 					ViewHolder viewholder = (ViewHolder)v.getTag();
 
+					if(position == 0 || viewholder.type == ObjectType.OBJECT_TYPE_PARENT_FOLDER) {
+						return false;
+					}
+					
 					Bundle data = new Bundle();
 					data.putString("name", viewholder.name);
 					data.putString("pid", fid);
@@ -302,6 +311,26 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 					return true;
 				}
 			});
+		}
+	}
+	
+	private class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			SingletonHttpClient.getInstance().executeGet(Constants.URL_LOGOFF);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			SharedPreferences settings = getBaseContext().getSharedPreferences("LoginFile", Context.MODE_PRIVATE);
+			Editor editor = settings.edit();
+			editor.remove("isLogged");
+			editor.commit();
+			Intent i = new Intent(getBaseContext(), MainActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
 		}
 	}
 
@@ -320,6 +349,8 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 		b.putString("id", viewholder.id);
 		b.putString("name", viewholder.name);
 		b.putBoolean("isRoot", false);
+		b.putString("pid", fid);
+		b.putString("pname", "Up to " + fname);
 		i.putExtras(b);
 		startActivity(i);
 	}
@@ -329,6 +360,17 @@ public class FolderActivity extends FragmentActivity implements EditDialog.OnEdi
 		finish();
 		Intent i = new Intent(this, FolderActivity.class);
 		i.putExtras(this.item);
+		startActivity(i);
+	}
+	
+	private void startDownloadActivity(String docid, String fname) {
+		String[] fnameInfo = fname.split("\\."); // dot is a reserved keyword in regular expression
+		String fExtension = fnameInfo[fnameInfo.length - 1];
+		
+		Intent i = new Intent(this, DownloadActivity.class);
+		i.putExtras(this.item);
+		i.putExtra("docid", docid);
+		i.putExtra("extension", fExtension);
 		startActivity(i);
 	}
 }

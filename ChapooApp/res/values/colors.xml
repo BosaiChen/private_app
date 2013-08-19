@@ -2,5 +2,6 @@
 <resources>
     <color name="lighter_gray">#dddddd</color>
     <color name="white">#ffffff</color>
-    
+    <color name="background_color">#ffffff</color>
+    <color name="app_color">#7dbeff</color>
 </resources>

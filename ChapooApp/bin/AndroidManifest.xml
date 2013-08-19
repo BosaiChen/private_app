@@ -55,6 +55,10 @@
             android:name="com.simbiosys.chapooapp.UploadActivity"
             android:label="@string/title_activity_upload" >
         </activity>
+        <activity
+            android:name="com.simbiosys.chapooapp.DownloadActivity"
+            android:label="@string/title_activity_download" >
+        </activity>
     </application>
 
 </manifest>
